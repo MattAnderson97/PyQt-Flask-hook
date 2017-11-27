@@ -21,24 +21,28 @@ class FlaskThread(threading.Thread):
 
 
 class UIThread(threading.Thread):
-    def __init__(self, id, name):
+    def __init__(self, id, name, port=5000):
         threading.Thread.__init__(self)
         self.threadID = id
         self.name = name
+        self.port = port
 
     def run(self):
         print("Starting thread " + self.name)
         app = QApplication(sys.argv)
-        window = MainWindow()
+        window = MainWindow(self.port)
         window.show()
         window.raise_()
         app.exec_()
         print("Exiting thread " + self.name)
 
 
+PORT = 5000
+
+
 if __name__ == "__main__":
-    flaskThread = FlaskThread(1, "flaskThread")
-    uiThread = UIThread(2, "uiThread")
+    flaskThread = FlaskThread(1, "flaskThread", PORT)
+    uiThread = UIThread(2, "uiThread", PORT)
     flaskThread.start()
     uiThread.start()
     print("Exiting main thread")
